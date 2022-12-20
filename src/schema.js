@@ -4,6 +4,7 @@ const {
   GraphQLList,
   GraphQLString,
   GraphQLEnumType,
+  GraphQLNonNull,
 } = require('graphql');
 
 const workflowYaml = require('./workflowYaml');
@@ -24,7 +25,7 @@ const WorkflowDefinitionPrimitive = new GraphQLObjectType({
   name: 'WorkflowDefinitionPrimitive',
   fields: {
     name: {
-      type: GraphQLString,
+      type: GraphQLNonNull(GraphQLString),
     },
   },
 });
@@ -33,10 +34,10 @@ const WorkflowDefinitionStep = new GraphQLObjectType({
   name: 'WorkflowDefinitionStep',
   fields: {
     name: {
-      type: GraphQLString,
+      type: GraphQLNonNull(GraphQLString),
     },
     type: {
-      type: StepType,
+      type: GraphQLNonNull(StepType),
     },
     resource: {
       type: WorkflowDefinitionPrimitive,
@@ -50,11 +51,11 @@ const WorkflowDefinitionEdge = new GraphQLObjectType({
   fields: {
     from: {
       name: 'WorkflowDefinitionStep',
-      type: WorkflowDefinitionStep,
+      type: GraphQLNonNull(WorkflowDefinitionStep),
     },
     to: {
       name: 'WorkflowDefinitionStep',
-      type: WorkflowDefinitionStep,
+      type: GraphQLNonNull(WorkflowDefinitionStep),
     },
     variable: {
       name: 'WorkflowDefinitionEdgeVariable',
@@ -68,14 +69,14 @@ const WorkflowDefinition = new GraphQLObjectType({
   name: 'Definition',
   fields: {
     name: {
-      type: GraphQLString,
+      type: GraphQLNonNull(GraphQLString),
       // resolve: (obj) => obj.name, // <---- resolve is optional when keys are the same
     },
     steps: {
-      type: new GraphQLList(WorkflowDefinitionStep),
+      type: GraphQLNonNull(new GraphQLList(GraphQLNonNull(WorkflowDefinitionStep))),
     },
     edges: {
-      type: new GraphQLList(WorkflowDefinitionEdge),
+      type: GraphQLNonNull(new GraphQLList(GraphQLNonNull(WorkflowDefinitionEdge))),
     },
   },
 });
