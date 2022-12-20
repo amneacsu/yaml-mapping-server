@@ -58,6 +58,10 @@ const convert = (workflowYaml) => {
     return { ...step, Name };
   });
 
+  const getNodeByName = (name) => (step) => {
+    return step.name === name;
+  };
+
   const nodes = steps
     .map((step, index, list) => {
       return {
@@ -76,15 +80,12 @@ const convert = (workflowYaml) => {
         // The next step after this one is under the key `Next` for all but end
         // steps, and is optional. If omitted, it defaults to the next step in
         // the declaration.
-        next: isJobStep(step)
-          ? step.Next ?? list[index + 1].Name
-          : null,
+        get next() {
+          if (!isJobStep(step)) return null;
+          return nodes.find(getNodeByName(step.Next ?? list[index + 1].Name));
+        },
       };
     });
-
-  const getNodeByName = (name) => (step) => {
-    return step.name === name;
-  };
 
   const edges = steps.reduce((acc, step, index, list) => {
     switch (step.Type) {

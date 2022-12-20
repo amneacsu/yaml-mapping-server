@@ -32,7 +32,7 @@ const WorkflowDefinitionPrimitive = new GraphQLObjectType({
 
 const WorkflowDefinitionStep = new GraphQLObjectType({
   name: 'WorkflowDefinitionStep',
-  fields: {
+  fields: () => ({
     name: {
       type: GraphQLNonNull(GraphQLString),
     },
@@ -43,7 +43,13 @@ const WorkflowDefinitionStep = new GraphQLObjectType({
       type: WorkflowDefinitionPrimitive,
       resolve: (obj) => obj.primitive,
     },
-  },
+    next: {
+      type: WorkflowDefinitionStep,
+      resolve: (obj) => {
+        return obj.next;
+      },
+    },
+  }),
 });
 
 const WorkflowDefinitionEdge = new GraphQLObjectType({
@@ -66,7 +72,7 @@ const WorkflowDefinitionEdge = new GraphQLObjectType({
 });
 
 const WorkflowDefinition = new GraphQLObjectType({
-  name: 'Definition',
+  name: 'WorkflowDefinition',
   fields: {
     name: {
       type: GraphQLNonNull(GraphQLString),
