@@ -20,6 +20,15 @@ const StepType = new GraphQLEnumType({
   },
 });
 
+const WorkflowDefinitionPrimitive = new GraphQLObjectType({
+  name: 'WorkflowDefinitionPrimitive',
+  fields: {
+    name: {
+      type: GraphQLString,
+    },
+  },
+});
+
 const WorkflowDefinitionStep = new GraphQLObjectType({
   name: 'WorkflowDefinitionStep',
   fields: {
@@ -28,6 +37,10 @@ const WorkflowDefinitionStep = new GraphQLObjectType({
     },
     type: {
       type: StepType,
+    },
+    resource: {
+      type: WorkflowDefinitionPrimitive,
+      resolve: (obj) => obj.primitive,
     },
   },
 });
